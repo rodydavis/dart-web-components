@@ -79,6 +79,12 @@ class WebComponent {
   ) {}
 
   List<String> get observedAttributes => [];
+
+  Node getRoot(HTMLElement instance) {
+    final element = instance;
+    final hasShadow = element.shadowRoot != null;
+    return hasShadow ? element.shadowRoot! : element;
+  }
 }
 
 mixin CleanupWebComponent on WebComponent {

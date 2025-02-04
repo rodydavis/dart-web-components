@@ -9,12 +9,6 @@ class XCounter extends WebComponent with CleanupWebComponent {
   final count = signal(0);
   late final template = computed(() => "<button>$count</button>");
 
-  Node getRoot(HTMLElement instance) {
-    final element = instance;
-    final hasShadow = element.shadowRoot != null;
-    return hasShadow ? element.shadowRoot! : element;
-  }
-
   @override
   void connectedCallback() {
     super.connectedCallback();
