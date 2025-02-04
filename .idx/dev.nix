@@ -19,7 +19,7 @@
       enable = true;
       previews = {
         web = {
-          command = ["dhttpd" "--path" "web" "--port" "$PORT" "--host" "0.0.0.0"];
+          command = ["dart" "run" "build_runner" "serve" "web" "$PORT" "--hostname" "0.0.0.0"];
           manager = "web";
         };
       };
@@ -28,13 +28,11 @@
     workspace = {
       # Runs when a workspace is first created
       onCreate = {
-        dhttpd-install = "dart pub global activate dhttpd";
-        default.openFiles = [ "web/style.css" "lib/main.dart" "web/index.html" ];
+        default.openFiles = [ "web/css/styles.css" "web/main.dart" "web/index.html" ];
       };
       # Runs when the workspace is (re)started
       onStart = {
         get-deps = "dart pub get";
-        app-build = "dart compile wasm -o web/wasm/main.dart.wasm lib/main.dart";
       };
     };
   };
