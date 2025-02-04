@@ -3,9 +3,11 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
 dependencies:
   signals: ^6.0.2
-  web: ^1.1.0
+  web: '>=0.4.2 <2.0.0'
 dev_dependencies:
   lints: ^5.0.0
+  build_runner: ^2.0.5
+  build_web_compilers: ^4.0.0
 scripts:
-  build: dart compile wasm -o web/wasm/main.dart.wasm lib/main.dart
-  serve: dhttpd --path web
+  build: dart run build_runner build -o web:build --release
+  serve: dart run build_runner serve web

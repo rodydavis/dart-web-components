@@ -2,8 +2,7 @@ import 'dart:js_interop';
 
 import 'package:signals/signals_core.dart';
 import 'package:web/web.dart';
-
-import '/wc.dart';
+import 'package:dart_web_components/dart_web_components.dart';
 
 class XCounter extends WebComponent with CleanupWebComponent {
   final count = signal(0);

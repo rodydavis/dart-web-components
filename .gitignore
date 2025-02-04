@@ -4,3 +4,4 @@
 web/wasm/**.mjs
 web/wasm/**.wasm
 web/wasm/**.map
+build/
