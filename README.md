@@ -5,13 +5,13 @@ Simple example with using Dart to create web components and compiling Dart to WA
 ## Build
 
 ```bash
-dart compile wasm -o web/wasm/main.dart.wasm lib/main.dart
+dart run build_runner build -o web:build --release
 ```
 
 ## Serve
 
 ```bash
-dhttpd --path web
+dart run build_runner serve web
 ```
 
 Open http://localhost:8080
