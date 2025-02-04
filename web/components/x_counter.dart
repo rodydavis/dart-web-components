@@ -1,6 +1,6 @@
 import 'dart:js_interop';
 
-import 'package:signals/signals_core.dart';
+import 'package:signals_core/signals_core.dart';
 import 'package:web/web.dart';
 import 'package:dart_web_components/dart_web_components.dart';
 
