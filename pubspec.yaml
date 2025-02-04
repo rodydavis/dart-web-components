@@ -1,0 +1,11 @@
+name: dart_web_components
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+dependencies:
+  signals: ^6.0.2
+  web: ^1.1.0
+dev_dependencies:
+  lints: ^5.0.0
+scripts:
+  build: dart compile wasm -o web/wasm/main.dart.wasm lib/main.dart
+  serve: dhttpd --path web
