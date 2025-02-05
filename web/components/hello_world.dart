@@ -1,4 +1,4 @@
-import 'package:dart_web_components/dart_web_components.dart';
+import 'package:web_components/web_components.dart';
 
 class HelloWorld extends WebComponent {
   @override
