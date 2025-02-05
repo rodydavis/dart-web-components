@@ -22,13 +22,17 @@ function createDartWebComponent(tag, construct, observed, obj) {
         obj.disconnectedCallback(this);
       }
 
+      adoptedCallback() {
+        obj.adoptedCallback(this);
+      }
+
       /**
        * @param {String} attr
        * @param {String} oldVal
        * @param {String} newVal
        */
       attributeChangedCallback(attr, oldVal, newVal) {
-        obj.attributeChangedCallback(attr, oldVal, newVal);
+        obj.attributeChangedCallback(this, attr, oldVal, newVal);
       }
 
       static get observedAttributes() {

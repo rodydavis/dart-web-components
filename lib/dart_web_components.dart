@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
+import 'package:signals_core/signals_core.dart';
 import 'package:web/web.dart';
 
 extension type CustomElement._(HTMLElement element) implements HTMLElement {
@@ -8,10 +9,12 @@ extension type CustomElement._(HTMLElement element) implements HTMLElement {
 
   external void disconnectedCallback();
 
+  external void adoptedCallback();
+
   external void attributeChangedCallback(
     String name,
-    String oldValue,
-    String newValue,
+    String? oldValue,
+    String? newValue,
   );
 }
 
@@ -51,13 +54,21 @@ class WebComponentRegistry {
       instances[el]?.disconnectedCallback();
     }.toJS;
 
+    obj['adoptedCallback'] = (HTMLElement el) {
+      instances[el]?.adoptedCallback();
+    }.toJS;
+
     obj['attributeChangedCallback'] = (
       HTMLElement el,
-      String name,
-      String oldValue,
-      String newValue,
+      JSString name,
+      JSString? oldValue,
+      JSString? newValue,
     ) {
-      instances[el]?.attributeChangedCallback(name, oldValue, newValue);
+      instances[el]?.attributeChangedCallback(
+        name.toDart,
+        oldValue?.toDart,
+        newValue?.toDart,
+      );
     }.toJS;
 
     createDartWebComponent(tagName, constructor, observedAttributes, obj);
@@ -72,18 +83,20 @@ class WebComponent {
 
   void disconnectedCallback() {}
 
+  void adoptedCallback() {}
+
   void attributeChangedCallback(
     String name,
-    String oldValue,
-    String newValue,
+    String? oldValue,
+    String? newValue,
   ) {}
 
   List<String> get observedAttributes => [];
 
-  Node getRoot(HTMLElement instance) {
+  T getRoot<T extends Node>(HTMLElement instance) {
     final element = instance;
     final hasShadow = element.shadowRoot != null;
-    return hasShadow ? element.shadowRoot! : element;
+    return (hasShadow ? element.shadowRoot! : element) as T;
   }
 }
 
@@ -96,5 +109,51 @@ mixin CleanupWebComponent on WebComponent {
     for (final cleanup in cleanup) {
       cleanup();
     }
+  }
+}
+
+mixin WithShadowDom on WebComponent {
+  @override
+  T getRoot<T extends Node>(HTMLElement instance) {
+    if (element.shadowRoot == null) {
+      element.attachShadow(ShadowRootInit(mode: 'open')) as T;
+    }
+    return super.getRoot(instance);
+  }
+}
+
+mixin WithAdoptedStyles on WithShadowDom, CleanupWebComponent {
+  ReadonlySignal<List<CSSStyleSheet>> sheets = listSignal([]);
+
+  @override
+  void connectedCallback() {
+    super.connectedCallback();
+    cleanup.add(effect(() {
+      getRoot<ShadowRoot>(element).adoptedStyleSheets = sheets().toJS;
+    }));
+  }
+}
+
+mixin ReactiveAttributes on WebComponent {
+  final attrs = mapSignal(<String, String?>{});
+
+  @override
+  void attributeChangedCallback(String name, String? oldValue, String? newValue) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+    if (observedAttributes.contains(name)) {
+      attrs[name] = newValue;
+    }
+  }
+
+  @override
+  void connectedCallback() {
+    super.connectedCallback();
+    for (final attr in observedAttributes) {
+      attrs[attr] = element.getAttribute(attr);
+    }
+  }
+
+  Computed<String?> attr(String name) {
+    return attrs.select((e) => e.value[name]);
   }
 }
