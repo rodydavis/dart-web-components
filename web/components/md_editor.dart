@@ -1,3 +1,68 @@
+import 'dart:js_interop';
+
+import 'package:signals_core/signals_core.dart';
+import 'package:web/web.dart';
+import 'package:dart_web_components/dart_web_components.dart';
+
+class MarkdownEditor extends WebComponent with CleanupWebComponent, WithShadowDom, WithAdoptedStyles {
+  final src = signal(testFile.trim());
+
+  final style = computed(() {
+    return r'''
+    :host {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 400px;
+    }
+    ''';
+  });
+
+  @override
+  late final sheets = computed(() {
+    final sheet = CSSStyleSheet();
+    sheet.replaceSync(style());
+    return [sheet];
+  });
+
+  late final viewer = computed(() {
+    final el = document.createElement('md-viewer');
+    return el as HTMLElement;
+  });
+
+  late final editor = computed(() {
+    final el = document.createElement('textarea') as HTMLTextAreaElement;
+    el.value = src.peek();
+    return el;
+  });
+
+  void _onEdit(Event e) {
+    src.value = editor().value;
+  }
+
+  @override
+  void connectedCallback() {
+    super.connectedCallback();
+    final root = getRoot<HTMLElement>(element);
+
+    root.appendChild(editor());
+    root.appendChild(document.createElement('br'));
+    root.appendChild(viewer());
+
+    editor().addEventListener('input', _onEdit.toJS);
+    editor().addEventListener('change', _onEdit.toJS);
+
+    cleanup.add(effect(() {
+      final url = Uri.dataFromString(src());
+      viewer().setAttribute('src', url.toString());
+    }));
+  }
+}
+
+final testFile = r'''
 ---
 __Advertisement :)__
 
@@ -243,3 +308,4 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
 ::: warning
 *here be dragons*
 :::
+''';
