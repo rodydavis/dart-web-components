@@ -1,5 +1,6 @@
 name: html_web_components
 version: 0.1.0
+description: HTML Web Components with pure dart that compile to WASM and JS
 homepage: https://github.com/rodydavis/dart-web-components
 repository: https://github.com/rodydavis/dart-web-components
 environment:
