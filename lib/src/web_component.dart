@@ -33,21 +33,8 @@ class WebComponent<T extends HTMLElement> {
     return (hasShadow ? element.shadowRoot! : element) as R;
   }
 
-  // bool get isCustom {
-  //   return element.getAttribute('is') != null;
-  // }
-
   static void define(String tag, WebComponent Function() create) {
     final obj = _factory(create);
-    // if (extendsTag != null) {
-    //   window.customElements.define(
-    //     tag,
-    //     obj,
-    //     ElementDefinitionOptions(extends_: extendsTag),
-    //   );
-    // } else {
-    //   window.customElements.define(tag, obj);
-    // }
     window.customElements.define(tag, obj);
   }
 }
