@@ -38,21 +38,21 @@ external JSAny _reflectConstruct(
   JSFunction constructor,
 );
 
+final _instances = <HTMLElement, WebComponent>{};
+
 JSFunction _factory(WebComponent Function() create) {
   final elemProto = globalContext['HTMLElement'] as JSObject;
-  const cec = #CustomElementConstructor;
-  var obj = globalContext[cec.toString()];
-  final instances = <HTMLElement, WebComponent>{};
+  late JSAny obj;
 
   JSAny constructor() {
     final args = <String>[].jsify()!;
     final self = _reflectConstruct(elemProto, args, obj as JSFunction);
     final el = self as HTMLElement;
-    instances.putIfAbsent(el, () => create()..element = el);
+    _instances.putIfAbsent(el, () => create()..element = el);
     return self;
   }
 
-  obj = globalContext[cec.toString()] = constructor.toJS;
+  obj = constructor.toJS;
   obj = obj as JSObject;
 
   final observedAttributes = create().observedAttributes;
@@ -62,13 +62,14 @@ JSFunction _factory(WebComponent Function() create) {
 
   final prototype = obj['prototype'] as JSObject;
   prototype['connectedCallback'] = (HTMLElement instance) {
-    instances[instance]?.connectedCallback();
+    _instances[instance]?.connectedCallback();
   }.toJSCaptureThis;
   prototype['disconnectedCallback'] = (HTMLElement instance) {
-    instances[instance]?.disconnectedCallback();
+    _instances[instance]?.disconnectedCallback();
+    _instances.remove(instance);
   }.toJSCaptureThis;
   prototype['adoptedCallback'] = (HTMLElement instance) {
-    instances[instance]?.adoptedCallback();
+    _instances[instance]?.adoptedCallback();
   }.toJSCaptureThis;
   prototype['attributeChangedCallback'] = (
     HTMLElement instance,
@@ -76,7 +77,7 @@ JSFunction _factory(WebComponent Function() create) {
     String? oldName,
     String? newName,
   ) {
-    instances[instance]?.attributeChangedCallback(name, oldName, newName);
+    _instances[instance]?.attributeChangedCallback(name, oldName, newName);
   }.toJSCaptureThis;
 
   return obj as JSFunction;
