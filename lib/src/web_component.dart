@@ -1,7 +1,10 @@
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+
 import 'package:web/web.dart';
 
 class WebComponent {
-  late final HTMLElement element;
+  late HTMLElement element;
 
   void connectedCallback() {}
 
@@ -15,11 +18,66 @@ class WebComponent {
     String? newValue,
   ) {}
 
-  List<String> get observedAttributes => [];
+  Iterable<String> get observedAttributes => [];
 
-  T getRoot<T extends Node>(HTMLElement instance) {
-    final element = instance;
+  T getRoot<T extends Node>() {
     final hasShadow = element.shadowRoot != null;
     return (hasShadow ? element.shadowRoot! : element) as T;
   }
+
+  static void define(String tag, WebComponent Function() create) {
+    final obj = _factory(create);
+    window.customElements.define(tag, obj);
+  }
+}
+
+@JS('Reflect.construct')
+external JSAny _reflectConstruct(
+  JSObject target,
+  JSAny args,
+  JSFunction constructor,
+);
+
+JSFunction _factory(WebComponent Function() create) {
+  final elemProto = globalContext['HTMLElement'] as JSObject;
+  const cec = #CustomElementConstructor;
+  var obj = globalContext[cec.toString()];
+  final instances = <HTMLElement, WebComponent>{};
+
+  JSAny constructor() {
+    final args = <String>[].jsify()!;
+    final self = _reflectConstruct(elemProto, args, obj as JSFunction);
+    final el = self as HTMLElement;
+    instances.putIfAbsent(el, () => create()..element = el);
+    return self;
+  }
+
+  obj = globalContext[cec.toString()] = constructor.toJS;
+  obj = obj as JSObject;
+
+  final observedAttributes = create().observedAttributes;
+
+  obj['prototype'] = elemProto['prototype'];
+  obj['observedAttributes'] = observedAttributes.toList().jsify()!;
+
+  final prototype = obj['prototype'] as JSObject;
+  prototype['connectedCallback'] = (HTMLElement instance) {
+    instances[instance]?.connectedCallback();
+  }.toJSCaptureThis;
+  prototype['disconnectedCallback'] = (HTMLElement instance) {
+    instances[instance]?.disconnectedCallback();
+  }.toJSCaptureThis;
+  prototype['adoptedCallback'] = (HTMLElement instance) {
+    instances[instance]?.adoptedCallback();
+  }.toJSCaptureThis;
+  prototype['attributeChangedCallback'] = (
+    HTMLElement instance,
+    String name,
+    String? oldName,
+    String? newName,
+  ) {
+    instances[instance]?.attributeChangedCallback(name, oldName, newName);
+  }.toJSCaptureThis;
+
+  return obj as JSFunction;
 }

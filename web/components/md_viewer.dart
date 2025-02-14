@@ -7,7 +7,7 @@ import 'package:markdown/markdown.dart';
 import 'package:web/web.dart';
 
 class MarkdownView extends WebComponent
-    with CleanupWebComponent, ReactiveAttributes, WithShadowDom {
+    with CleanupWebComponent, WithShadowDom, ReactiveAttributes {
   http.Client client = http.Client();
 
   @override
@@ -31,7 +31,7 @@ class MarkdownView extends WebComponent
   void connectedCallback() {
     super.connectedCallback();
     cleanup.add(effect(() {
-      getRoot<ShadowRoot>(element).innerHTML = html.value.toJS;
+      getRoot<ShadowRoot>().innerHTML = html.value.toJS;
     }));
   }
 }

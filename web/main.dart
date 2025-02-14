@@ -6,9 +6,8 @@ import 'components/md_viewer.dart';
 import 'components/md_editor.dart';
 
 void main() {
-  final registry = WebComponentRegistry.instance;
-  registry.define('hello-world', HelloWorld.new);
-  registry.define('x-counter', XCounter.new);
-  registry.define('md-viewer', MarkdownView.new);
-  registry.define('md-editor', MarkdownEditor.new);
+  WebComponent.define('hello-world', HelloWorld.new);
+  WebComponent.define('x-counter', XCounter.new);
+  WebComponent.define('md-viewer', MarkdownView.new);
+  WebComponent.define('md-editor', MarkdownEditor.new);
 }

@@ -47,18 +47,21 @@ class MarkdownEditor extends WebComponent
   @override
   void connectedCallback() {
     super.connectedCallback();
-    final root = getRoot<HTMLElement>(element);
+    final root = getRoot<HTMLElement>();
 
     root.appendChild(editor());
     root.appendChild(document.createElement('br'));
-    root.appendChild(viewer());
+    final view = root.appendChild(viewer()) as HTMLElement;
 
     editor().addEventListener('input', _onEdit.toJS);
     editor().addEventListener('change', _onEdit.toJS);
 
+    // final url = Uri.dataFromString(src());
+    // view.setAttribute('src', url.toString());
+
     cleanup.add(effect(() {
       final url = Uri.dataFromString(src());
-      viewer().setAttribute('src', url.toString());
+      view.setAttribute('src', url.toString());
     }));
   }
 }

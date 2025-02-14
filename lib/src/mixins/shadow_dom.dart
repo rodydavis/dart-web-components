@@ -4,10 +4,10 @@ import '../web_component.dart';
 
 mixin WithShadowDom on WebComponent {
   @override
-  T getRoot<T extends Node>(HTMLElement instance) {
+  T getRoot<T extends Node>() {
     if (element.shadowRoot == null) {
       element.attachShadow(ShadowRootInit(mode: 'open')) as T;
     }
-    return super.getRoot(instance);
+    return super.getRoot();
   }
 }

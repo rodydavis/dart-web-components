@@ -13,7 +13,7 @@ mixin WithAdoptedStyles on WithShadowDom, CleanupWebComponent {
   void connectedCallback() {
     super.connectedCallback();
     cleanup.add(effect(() {
-      getRoot<ShadowRoot>(element).adoptedStyleSheets = sheets().toJS;
+      getRoot<ShadowRoot>().adoptedStyleSheets = sheets().toJS;
     }));
   }
 }

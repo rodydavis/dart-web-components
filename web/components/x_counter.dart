@@ -15,7 +15,7 @@ class XCounter extends WebComponent with CleanupWebComponent {
   @override
   void connectedCallback() {
     super.connectedCallback();
-    final root = getRoot<HTMLElement>(element);
+    final root = getRoot<HTMLElement>();
 
     root.addEventListener("click", _onClick.toJS);
 

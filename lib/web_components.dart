@@ -1,5 +1,4 @@
 export 'src/web_component.dart';
-export 'src/registry.dart';
 export 'src/mixins/adopted_styles.dart';
 export 'src/mixins/cleanup.dart';
 export 'src/mixins/reactive_attributes.dart';

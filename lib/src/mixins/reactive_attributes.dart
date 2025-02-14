@@ -3,7 +3,7 @@ import 'package:signals_core/signals_core.dart';
 import '../web_component.dart';
 
 mixin ReactiveAttributes on WebComponent {
-  final attrs = mapSignal(<String, String?>{});
+  final attrs = <String, Signal<String?>>{};
 
   @override
   void attributeChangedCallback(
@@ -13,19 +13,16 @@ mixin ReactiveAttributes on WebComponent {
   ) {
     super.attributeChangedCallback(name, oldValue, newValue);
     if (observedAttributes.contains(name)) {
-      attrs[name] = newValue;
+      if (attrs.containsKey(name)) {
+        attrs[name]!.value = newValue;
+      }
     }
   }
 
-  @override
-  void connectedCallback() {
-    super.connectedCallback();
-    for (final attr in observedAttributes) {
-      attrs[attr] = element.getAttribute(attr);
+  ReadonlySignal<String?> attr(String name) {
+    if (!attrs.containsKey(name)) {
+      attrs[name] = signal(element.getAttribute(name));
     }
-  }
-
-  Computed<String?> attr(String name) {
-    return attrs.select((e) => e.value[name]);
+    return attrs[name]!;
   }
 }
