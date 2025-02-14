@@ -1,4 +1,4 @@
-import 'package:web_components/web_components.dart';
+import 'package:html_web_components/html_web_components.dart';
 
 import 'components/hello_world.dart';
 import 'components/x_counter.dart';

@@ -2,8 +2,8 @@ import 'dart:js_interop';
 
 import 'package:signals_core/signals_core.dart';
 import 'package:web/web.dart';
-import 'package:web_components/helpers.dart';
-import 'package:web_components/web_components.dart';
+import 'package:html_web_components/helpers.dart';
+import 'package:html_web_components/html_web_components.dart';
 
 class MarkdownEditor extends WebComponent
     with

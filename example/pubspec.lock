@@ -233,6 +233,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  html_web_components:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.1.0"
   http:
     dependency: "direct main"
     description:
@@ -521,13 +528,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  web_components:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.0"
   web_socket:
     dependency: transitive
     description:

@@ -4,12 +4,14 @@ How to create [web components](https://developer.mozilla.org/en-US/docs/Web/API/
 
 You can use them in any framework or library that supports HTML.
 
+> Disclaimer: This is not an official Google project.
+
 ## Getting Started
 
 ### 1. Extend the WebComponent class
 
 ```dart
-import 'package:web_components/web_components.dart';
+import 'package:html_web_components/html_web_components.dart';
 
 class MyComponent extends WebComponent {
   ...
@@ -21,7 +23,7 @@ class MyComponent extends WebComponent {
 Use the connectedCallback to define the component setup logic instead of the constructor.
 
 ```dart
-import 'package:web_components/web_components.dart';
+import 'package:html_web_components/html_web_components.dart';
 
 class MyComponent extends WebComponent {
   @override
@@ -34,7 +36,7 @@ class MyComponent extends WebComponent {
 ### 3. Register the component
 
 ```dart
-import 'package:web_components/web_components.dart';
+import 'package:html_web_components/html_web_components.dart';
 ...
 
 void main() {
@@ -51,8 +53,8 @@ There are some helper mixins to make it easier to work with web components.
 This mixin adds an array of callbacks that will be disposed when the component is disconnected.
 
 ```dart
-import 'package:web_components/web_components.dart';
-import 'package:web_components/helpers.dart';
+import 'package:html_web_components/html_web_components.dart';
+import 'package:html_web_components/helpers.dart';
 
 class MyComponent extends WebComponent with WebComponentCleanupMixin {
   @override
@@ -67,8 +69,8 @@ class MyComponent extends WebComponent with WebComponentCleanupMixin {
 This mixin adds a shadow root to the component.
 
 ```dart
-import 'package:web_components/web_components.dart';
-import 'package:web_components/helpers.dart';
+import 'package:html_web_components/html_web_components.dart';
+import 'package:html_web_components/helpers.dart';
 
 class MyComponent extends WebComponent with WebComponentShadowDomMixin {
   @override
@@ -83,8 +85,8 @@ class MyComponent extends WebComponent with WebComponentShadowDomMixin {
 This mixin adds adopted styles to the component. This only works with the shadow dom.
 
 ```dart
-import 'package:web_components/web_components.dart';
-import 'package:web_components/helpers.dart';
+import 'package:html_web_components/html_web_components.dart';
+import 'package:html_web_components/helpers.dart';
 import 'package:signals_core/signals_core.dart';
 
 class MyComponent extends WebComponent with WebComponentShadowDomMixin, WebComponentAdoptedStylesMixin {
@@ -107,8 +109,8 @@ class MyComponent extends WebComponent with WebComponentShadowDomMixin, WebCompo
 This mixin adds reactive attributes to the component.
 
 ```dart
-import 'package:web_components/web_components.dart';
-import 'package:web_components/helpers.dart';
+import 'package:html_web_components/html_web_components.dart';
+import 'package:html_web_components/helpers.dart';
 import 'package:signals_core/signals_core.dart';
 
 class MyComponent extends WebComponent with WebComponentReactiveAttributesMixin {
@@ -130,3 +132,4 @@ class MyComponent extends WebComponent with WebComponentReactiveAttributesMixin 
 
 - [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 - [Are web components used a lot?](https://arewebcomponentsathingyet.com)
+- [Dart Web Components](https://github.com/dart-archive/web-components)
