@@ -3,8 +3,9 @@ import 'dart:js_interop_unsafe';
 
 import 'package:web/web.dart';
 
-class WebComponent {
-  late HTMLElement element;
+class WebComponent<T extends HTMLElement> {
+  late T element;
+  final String extendsType = 'HTMLElement';
 
   void connectedCallback() {}
 
@@ -20,13 +21,33 @@ class WebComponent {
 
   Iterable<String> get observedAttributes => [];
 
-  T getRoot<T extends Node>() {
-    final hasShadow = element.shadowRoot != null;
-    return (hasShadow ? element.shadowRoot! : element) as T;
+  bool get formAssociated => false;
+
+  ElementInternals? get internals => element['_internals'] as ElementInternals?;
+  set internals(ElementInternals? value) {
+    element['_internals'] = value;
   }
+
+  R getRoot<R extends JSObject>() {
+    final hasShadow = element.shadowRoot != null;
+    return (hasShadow ? element.shadowRoot! : element) as R;
+  }
+
+  // bool get isCustom {
+  //   return element.getAttribute('is') != null;
+  // }
 
   static void define(String tag, WebComponent Function() create) {
     final obj = _factory(create);
+    // if (extendsTag != null) {
+    //   window.customElements.define(
+    //     tag,
+    //     obj,
+    //     ElementDefinitionOptions(extends_: extendsTag),
+    //   );
+    // } else {
+    //   window.customElements.define(tag, obj);
+    // }
     window.customElements.define(tag, obj);
   }
 }
@@ -41,7 +62,8 @@ external JSAny _reflectConstruct(
 final _instances = <HTMLElement, WebComponent>{};
 
 JSFunction _factory(WebComponent Function() create) {
-  final elemProto = globalContext['HTMLElement'] as JSObject;
+  final base = create();
+  final elemProto = globalContext[base.extendsType] as JSObject;
   late JSAny obj;
 
   JSAny constructor() {
@@ -55,10 +77,12 @@ JSFunction _factory(WebComponent Function() create) {
   obj = constructor.toJS;
   obj = obj as JSObject;
 
-  final observedAttributes = create().observedAttributes;
+  final observedAttributes = base.observedAttributes;
+  final formAssociated = base.formAssociated;
 
   obj['prototype'] = elemProto['prototype'];
   obj['observedAttributes'] = observedAttributes.toList().jsify()!;
+  obj['formAssociated'] = formAssociated.jsify()!;
 
   final prototype = obj['prototype'] as JSObject;
   prototype['connectedCallback'] = (HTMLElement instance) {

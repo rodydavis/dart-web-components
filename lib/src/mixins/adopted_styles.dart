@@ -6,7 +6,8 @@ import 'package:web/web.dart';
 import 'cleanup.dart';
 import 'shadow_dom.dart';
 
-mixin WithAdoptedStyles on WithShadowDom, CleanupWebComponent {
+mixin WebComponentAdoptedStylesMixin
+    on WebComponentShadowDomMixin, WebComponentCleanupMixin {
   ReadonlySignal<List<CSSStyleSheet>> sheets = listSignal([]);
 
   @override

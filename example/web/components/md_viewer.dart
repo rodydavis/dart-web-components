@@ -1,13 +1,17 @@
 import 'dart:js_interop';
 
 import 'package:web_components/web_components.dart';
+import 'package:web_components/helpers.dart';
 import 'package:signals_core/signals_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:markdown/markdown.dart';
 import 'package:web/web.dart';
 
 class MarkdownView extends WebComponent
-    with CleanupWebComponent, WithShadowDom, ReactiveAttributes {
+    with
+        WebComponentCleanupMixin,
+        WebComponentShadowDomMixin,
+        WebComponentReactiveAttributesMixin {
   http.Client client = http.Client();
 
   @override

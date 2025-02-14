@@ -1,12 +1,16 @@
+import 'dart:js_interop';
+
 import 'package:web/web.dart';
 
 import '../web_component.dart';
 
-mixin WithShadowDom on WebComponent {
+mixin WebComponentShadowDomMixin on WebComponent {
+  ShadowRootInit get shadowOptions => ShadowRootInit(mode: 'open');
+
   @override
-  T getRoot<T extends Node>() {
+  R getRoot<R extends JSObject>() {
     if (element.shadowRoot == null) {
-      element.attachShadow(ShadowRootInit(mode: 'open')) as T;
+      element.attachShadow(shadowOptions) as R;
     }
     return super.getRoot();
   }

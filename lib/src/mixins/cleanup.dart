@@ -1,6 +1,6 @@
 import '../web_component.dart';
 
-mixin CleanupWebComponent on WebComponent {
+mixin WebComponentCleanupMixin on WebComponent {
   final cleanup = <void Function()>[];
 
   @override

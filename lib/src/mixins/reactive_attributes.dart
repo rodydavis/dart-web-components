@@ -2,8 +2,8 @@ import 'package:signals_core/signals_core.dart';
 
 import '../web_component.dart';
 
-mixin ReactiveAttributes on WebComponent {
-  final attrs = <String, Signal<String?>>{};
+mixin WebComponentReactiveAttributesMixin on WebComponent {
+  final _attrs = <String, Signal<String?>>{};
 
   @override
   void attributeChangedCallback(
@@ -13,16 +13,20 @@ mixin ReactiveAttributes on WebComponent {
   ) {
     super.attributeChangedCallback(name, oldValue, newValue);
     if (observedAttributes.contains(name)) {
-      if (attrs.containsKey(name)) {
-        attrs[name]!.value = newValue;
+      if (_attrs.containsKey(name)) {
+        _attrs[name]!.value = newValue;
       }
     }
   }
 
-  ReadonlySignal<String?> attr(String name) {
-    if (!attrs.containsKey(name)) {
-      attrs[name] = signal(element.getAttribute(name));
+  ReadonlySignal<String?> attr(
+    String name, {
+    String? defaultValue,
+  }) {
+    if (!_attrs.containsKey(name)) {
+      final value = element.getAttribute(name) ?? defaultValue;
+      _attrs[name] = signal(value);
     }
-    return attrs[name]!;
+    return _attrs[name]!;
   }
 }
