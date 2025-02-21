@@ -12,26 +12,20 @@ class MarkdownEditor extends WebComponent
         WebComponentAdoptedStylesMixin {
   final src = signal(testFile.trim());
 
-  final style = computed(() {
-    return r'''
-    :host {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
-    }
-    textarea {
-      width: 100%;
-      height: 400px;
-    }
-    ''';
-  });
+  final style = Css(readonly(r'''
+  :host {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  textarea {
+    width: 100%;
+    height: 400px;
+  }
+  '''));
 
   @override
-  late final sheets = computed(() {
-    final sheet = CSSStyleSheet();
-    sheet.replaceSync(style());
-    return [sheet];
-  });
+  late final sheets = computed(() => [style]);
 
   late final viewer = computed(() {
     final el = document.createElement('md-viewer');

@@ -33,6 +33,15 @@ class WebComponent<T extends HTMLElement> {
     return (hasShadow ? element.shadowRoot! : element) as R;
   }
 
+  void append(Node node) {
+    final hasShadow = element.shadowRoot != null;
+    if (hasShadow) {
+      getRoot<ShadowRoot>().append(node);
+    } else {
+      getRoot<HTMLElement>().append(node);
+    }
+  }
+
   static void define(String tag, WebComponent Function() create) {
     final obj = _factory(create);
     window.customElements.define(tag, obj);

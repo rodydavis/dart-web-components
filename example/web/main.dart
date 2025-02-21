@@ -4,10 +4,12 @@ import 'components/hello_world.dart';
 import 'components/x_counter.dart';
 import 'components/md_viewer.dart';
 import 'components/md_editor.dart';
+import 'components/counter.dart';
 
 void main() {
   WebComponent.define('hello-world', HelloWorld.new);
   WebComponent.define('x-counter', XCounter.new);
   WebComponent.define('md-viewer', MarkdownView.new);
   WebComponent.define('md-editor', MarkdownEditor.new);
+  WebComponent.define('my-component', Counter.new);
 }
