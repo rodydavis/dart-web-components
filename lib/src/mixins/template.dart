@@ -33,6 +33,7 @@ class ElementNode extends SignalsNode {
   final MapSignal<String, ReadonlySignal<Object?>> properties;
   final MapSignal<String, void Function(Event)> events;
   final ListSignal<SignalsNode> children;
+  void Function(Element)? onCreate;
 
   ElementNode(
     this.tag, {
@@ -40,6 +41,7 @@ class ElementNode extends SignalsNode {
     Map<String, ReadonlySignal<Object?>> properties = const {},
     Map<String, void Function(Event)> events = const {},
     List<SignalsNode> children = const [],
+    this.onCreate,
   })  : children = ListSignal(List.from(children)),
         attributes = MapSignal(Map.from(attributes)),
         properties = MapSignal(Map.from(properties)),
@@ -77,6 +79,7 @@ class ElementNode extends SignalsNode {
         element.append(child.toNode());
       }
     });
+    onCreate?.call(element);
     return element;
   }
 }
