@@ -28,11 +28,6 @@ class WebComponent<T extends HTMLElement> {
     element['_internals'] = value;
   }
 
-  R getRoot<R extends JSObject>() {
-    final hasShadow = element.shadowRoot != null;
-    return (hasShadow ? element.shadowRoot! : element) as R;
-  }
-
   static void define(String tag, WebComponent Function() create) {
     final obj = _factory(create);
     window.customElements.define(tag, obj);

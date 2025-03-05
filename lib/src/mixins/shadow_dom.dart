@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:web/web.dart';
 
 import '../web_component.dart';
@@ -7,11 +5,10 @@ import '../web_component.dart';
 mixin WebComponentShadowDomMixin on WebComponent {
   ShadowRootInit get shadowOptions => ShadowRootInit(mode: 'open');
 
-  @override
-  R getRoot<R extends JSObject>() {
+  ShadowRoot get root {
     if (element.shadowRoot == null) {
-      element.attachShadow(shadowOptions) as R;
+      element.attachShadow(shadowOptions);
     }
-    return super.getRoot();
+    return element.shadowRoot!;
   }
 }

@@ -6,10 +6,7 @@ import 'package:html_web_components/helpers.dart';
 import 'package:html_web_components/html_web_components.dart';
 
 class MarkdownEditor extends WebComponent
-    with
-        WebComponentCleanupMixin,
-        WebComponentShadowDomMixin,
-        WebComponentAdoptedStylesMixin {
+    with WebComponentCleanupMixin, WebComponentShadowDomMixin, WebComponentAdoptedStylesMixin {
   final src = signal(testFile.trim());
 
   final style = computed(() {
@@ -51,7 +48,7 @@ class MarkdownEditor extends WebComponent
   @override
   void connectedCallback() {
     super.connectedCallback();
-    final root = getRoot<HTMLElement>();
+    final root = element;
 
     root.appendChild(editor());
     root.appendChild(document.createElement('br'));
